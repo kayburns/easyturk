@@ -1,2 +1,2 @@
-from easyturk import EasyTurk
-import interface
+from .easyturk import EasyTurk
+from easyturk import interface

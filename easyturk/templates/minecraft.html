@@ -1,0 +1,439 @@
+<html>
+<head>
+  <title>Play Minecraft with a Virtual Agent</title>
+  <!-- easyturk depends on these libraries -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js'></script>
+  <!-- end of required libraries -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js'></script>
+  <style>
+    #counter {
+      margin: 0 10px;
+      font-size: 20pt;
+      font-weight: bold;
+    }
+    img {
+      height: 600px;
+    }
+    img.example {
+      height: 200px;
+    }
+    .tasks-container {
+      margin-top: 15px;
+      margin-bottom: 30px;
+      background-color: #DBDBDB;
+    }
+    .examples-container {
+      margin-top: 15px;
+      margin-bottom: 30px;
+      background-color: #9fbccb;
+    }
+    .instructions-container {
+      margin-top: 15px;
+      margin-bottom: 30px;
+      background-color: #F0EAD6;
+    }
+    p {
+      font-size: 17px;
+      text-align: center;
+    }
+    li {
+        font-size: 22px;
+    }
+    div {
+        font-size: 22px;
+    }
+  </style>
+</head>
+<body>
+<!-- General info about project and disclaimers -->
+<div class='container instructions-container'>
+  <div id='instructions-section'>
+    <div class='instructions'>
+      <div class='row'>
+        <div class='col-md-12'>
+          <h1>Welcome to the Minecraft Assistant project!</h1>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-md-12'>
+          <ul>
+            <p>In this task, we'll ask you to work with a virtual agent in Minecraft.
+                If you work with the agent successfully, you will qualify to work with the agent again in a more creative build task for larger bonuses. 
+                To receive credit, you will need to complete the full tutorial and fill out the survey below.
+            </p>
+            <p>
+                We have built an agent to help Minecraft users build houses.
+                Currently, the agent only knows how to build a few objects and only understands a few requests.
+                You will help the agent by teaching it how to build new kinds of buildings in terms of the commands it already knows.
+                As more users like you interact with the agent, it will quickly learn how to build new kinds of house designs.
+            </p>
+            <p>For this task, you will follow the tutorial below to teach the agent how to build a second story on a given house.
+              If you qualify for the next task, you will be able to creatively build a house with a design of your choosing
+              by teaching the agent new commands and by using commands defined by other users.
+              Our goal is to have the agent be able to do more user-defined tasks over the course of interaction.
+            </p>
+            <p> <b>Important:</b> You must have Minecraft downloaded and have a valid license.
+              We cannot reimburse for purchase of a Minecraft license, so please only complete the tutorial if you have a license already.
+              The tutorial requires version 1.12 specifically
+              (If you have Minecraft already, you can easily change the version by following the instructions <a href="https://help.minecraft.net/hc/en-us/articles/360034754852-Changing-game-versions-">here<a>).
+            </p>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tutorial Walkthrough: Overview -->
+<div class='container instructions-container'>
+  <div id='instructions-section'>
+    <div class='instructions'>
+      <div class='row'>
+        <div class='col-md-12'>
+          <h1>Tutorial step 1: Set up Minecraft and launch the agent</h1>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-md-12'>
+          <ul>
+            <li>To launch the tutorial please follow the instructions at this link: <a href="https://powerful-beyond-15085.herokuapp.com">https://powerful-beyond-15085.herokuapp.com</a>.
+              Once you click "launch", it will take about <b>10 minutes</b> to set up the agent.
+              During that time, please read the instructions below to understand how the agent works. </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- General info -->
+<!-- how agent learns -->
+<!-- destroy function -->
+<!-- build function & controls (# blocks generated, locations) -->
+<!-- defining new words -->
+<div class='container instructions-container'>
+  <div id='instructions-section'>
+    <div class='instructions'>
+      <div class='row'>
+        <div class='col-md-12'>
+          <h1>Tutorial Step 2: Learn about the bot</h1>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-md-12'>
+          <ul>
+            <b>How does the agent work?</b>
+            <p> The agent understands how to do a few basic actions from natural language commands.
+              The most important functions are building and destroying objects, which we'll be using in the tutorial.
+              However, if the agent doesn't understand what you're asking or doesn't understand how to do your request, 
+              you can teach it by describing your request in terms of commands the agent does know how to do.
+              We'll cover all of this in this tutorial.
+            </p>
+            <b>The Destroy Function</b>
+            <p>The agent knows how to destory some objects.
+              It will periodically tell you what objects it sees in the scene.
+              To get it to destroy an object, you could ask it something like "remove the floor" and it will remove any flooring that it see from the house.
+              Keep in mind that the agent is still learning and may not remove all of the flooring.
+            </p>
+            <b>The Build Function</b>
+            <p>The agent is still learning how to build some objects. It has a library of objects it knows how to build.
+              You can ask it to build any of these objects:</p>
+            <p><b>balcony, bed, bookcase, ceiling, column, deck, door, fence, floor, foundation, garden, grass,
+              ground, ladder, lights, patio, pillar, porch, railing, roof, stair, torch, walkway, wall, window, yard
+            </b></p>
+            <p>You could ask the agent to build one of these objects by saying something like "build a walkway".
+            </p>
+            <p>However, the agent will build these objects in a peculiar way. 
+              First, it picks a starting voxel location.
+              You can specify one by saying something like "build a fence in front of the house".
+              If you say "build a wall here" it will start building near your location.
+              If you say "build a wall there" it will start building near the location of your pointer.
+              If you don't specify a location, the agent will ask for a hint.
+              If you respond to the hint, the agent will use your pointer as the starting location.
+              <b>Warning:</b> it may take a minute for the agent to think, be sure to keep your pointer in place while the agent thinks about what to build.
+            </p>
+            <p>
+              Next, it will decide how many blocks to place.
+              For some objects, (like bed) it will always place 2 blocks.
+              For other objects, you can specify a size saying something like "build a large wall".
+              If you don't specify a size, the agent will place 20 blocks.
+              Here are the sizes you can specify and the number of blocks they correspond to:
+            </p>
+            <p><b>small: 5 blocks</b></p>
+            <p><b>no size: 20 blocks</b></p>
+            <p><b>large: 50 blocks</b></p>
+            <p><b>huge: 100 blocks</b></p>
+            <p> Finally, it will decide where to place blocks and what type to make them.
+              For some classes, like floor or garden, the type of block will be fairly similar across different types of homes.
+              For other classes, like wall or roof, the agent will try to match some of the other blocks in the scene.
+              The agent relies a lot on the hints you give to it.
+              <b>In particular, it will use the 7 or so blocks around the starting location. </b>
+              So if you give it a suggestion of around the size, it will have an easier time building for you.
+              We will show you how to do this in the tutorial. 
+            </p>
+            <b>Defining New Commands</b>
+            <p>When the agent doesn't know how to do something, you can provide it with instructions.
+              It will remember your instructions in the future.
+              You can use this template to provide instructions:
+            </p>
+            <p>
+              <b>def: your new command here; known command 1; known command 2; known command 3</b>
+            </p>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tutorial Walkthrough: House 1 -->
+<div class='container instructions-container'>
+  <div id='instructions-section'>
+    <div class='instructions'>
+      <div class='row'>
+        <div class='col-md-12'>
+          <h1>Tutorial Step 3: Teach the agent a new instruction</h1>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-md-12'>
+          <ul>
+            <p>Once the agent is ready, follow the instructions on the webpage to connect.
+              Your goal in the tutorial is to teach the agent how to understand the command "build a second story".
+              Once you see the agent enter the server, say "hello".
+              Wait for the agent to respond and then ask it to "come here".
+              The purpose of these introductions is to give the agent time to load all of the objects in the scene.
+              Once you see it say "Here are the objects in the scene" it's ready to answer requests.
+              Here's an example:
+            </p>
+            <p><img src="https://raw.githubusercontent.com/garyxcheng/garyxcheng.github.io/master/media/200px-Gary_the_Snail_SBSP.png" alt="bot joins" style="height:400px;"></p>
+            <p>
+            </p>
+            <p><img src="images/build_wall.png" alt="build wall" style="height:400px;"></p>
+            <p><img src="images/build_roof.png" alt="build roof" style="height:400px;"></p>
+            <p><img src="images/build_wall_result.png" alt="build wall result" style="height:400px;"></p>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tutorial Walkthrough: House 2 -->
+<div class='container instructions-container'>
+  <div id='instructions-section'>
+    <div class='instructions'>
+      <div class='row'>
+        <div class='col-md-12'>
+          <h1>Tutorial Step 4: Use your instruction in a New Setting</h1>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-md-12'>
+          <ul>
+            <b>Instructions</b>
+            <p>We're testing out a virtual agent we built in Minecraft.</p>
+            <p>For this project, you are asked to interact with the bot for 10 minutes. You may ask it to do anything you'd like. Explore what the bot can and cannot do.</p>
+            <p>Please make sure that you have Minecraft installed and a valid license. To change your version to 1.12, follow the instructions <a href="https://help.minecraft.net/hc/en-us/articles/360034754852-Changing-game-versions-">here</a></p>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Collect IP -->
+<div class='container tasks-container'>
+  <div class='container'>
+    <h2>Tutorial Step 5: Verify </h2>
+    <li>Enter the IP address that was shown to you after launching below. It should look something like 123.123.123.123.
+      This helps us match your survey response to the data collected from the Minecraft session.
+    </li>
+  </div>
+
+  <div class='container-fluid'>
+    <div class='row'>
+      <div class='col-12'>
+        <div id='image-container'>
+        </div>
+      </div>
+    </div>
+    <br />
+    <br />
+    <div class='row justify-content-center'>
+      <div class='col-6'>
+        <textarea type="text" name="code" id='code' rows="3" cols='50'></textarea>
+      </div>
+    </div>
+    <div class='row justify-content-center' style='margin-top: 10px; padding-bottom: 10px;'>
+      <div class='col-2'>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Survey: what was difficult about working with the agent? did the agent ever work in ways that you didn't expect? -->
+<div class='container tasks-container'>
+  <div class='container'>
+    <h2>Tutorial Step 6: Answer these questions. </h2>
+    <li>What was difficult about working with the agent?</li>
+    <li>Did the agent ever work in ways that you didn't expect or were frustrating?</li>
+    <li>Do you have any ideas about how we could improve the agent?</li>
+  </div>
+
+  <div class='container-fluid'>
+    <div class='row'>
+      <div class='col-12'>
+        <div id='image-container'>
+        </div>
+      </div>
+    </div>
+    <br />
+    <br />
+    <div class='row justify-content-center'>
+      <div class='col-6'>
+        <textarea type="text" name="code" id='code' rows="3" cols='50'></textarea>
+      </div>
+    </div>
+    <div class='row justify-content-center' style='margin-top: 10px; padding-bottom: 10px;'>
+      <div class='col-2'>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--IMPORTANT: This import contains all the functions you need to read in your input data and send back worker outputs.-->  
+{% include "easyturk.html" %}
+
+  <script>
+    // Define some default input.
+    // It is good practice to define standard inputs for a task which will be overwritten when launching
+    // your actual task. The default inputs allow you to render and debug your task locally.
+    var DEFAULT_INPUT = []
+
+    var input = null;
+
+    // This is where we will be collecting the captions for each image;
+    var codes = [];
+
+    // Some variables to track state of the HIT.
+    var idx = 0;
+    var enabled = false;
+
+    function main() {
+      // If this is a HIT on AMT, then replace the default input with the real
+      // input.
+      input = easyturk.getInput(DEFAULT_INPUT);
+
+      // Enable the task.
+      if (!easyturk.isPreview()){
+        enableTask();
+      }
+
+      // Set up the correct.
+      _.each(input, function() { codes.push(null); });
+
+      // Preload all images
+      _.each(input, function(input_elem) {
+        var imgUrl = input_elem['url'];
+        var img = new Image();
+        img.onload = function() { console.log('loaded image from ' + imgUrl); };
+        img.src = imgUrl;
+      });
+
+      render();
+    }
+
+    // Use the current index to update the image and description
+    function render() {
+      // Set up the image
+      $('#image-container').empty();
+      $("<h1 style=\"text-align:center;\">"+input[idx]['ip']+"</h1>").appendTo($('#image-container'));
+
+      // Set up the input text field
+      $('#code').val(codes[idx]);
+
+      // Refresh the counter
+      $('.counter-top').text(idx + 1);
+      $('.counter-bottom').text(input.length);
+
+      // If the UI is enabled, enable or disable the buttons depending on
+      // the index.
+      if (enabled) {
+        $('#prev-btn').prop('disabled', false);
+        $('#next-btn').prop('disabled', false);
+        if (idx == 0) {
+          $('#prev-btn').prop('disabled', true);
+        }
+        if (idx == input.length - 1) {
+          $('#next-btn').prop('disabled', true);
+        }
+      }
+    }
+
+    // Update the index, and save the text in the text area.
+    function setIdx(newIdx) {
+      if (newIdx < 0 || newIdx >= input.length) return;
+      idx = newIdx;
+      render();
+    }
+
+    function saveCaption() {
+      var c = $('#code').val();
+      codes[idx] = c;
+      return true;
+    }
+
+    // Enable the UI.
+    function enableTask() {
+      enabled = true;
+      easyturk.setupSubmit();
+
+      // Enable components
+      $('#next-btn').click(function() {
+          if (saveCaption()) {
+              setIdx(idx + 1);
+          }
+      });
+      $('#prev-btn').click(function() {
+          if (saveCaption()) {
+              setIdx(idx - 1);
+          }
+      });
+      $('#submit-btn').prop('disabled', false);
+
+      $('#submit-btn').click(function() {
+        // Make sure to save the last one.
+        if (!saveCaption()) {
+          return false;
+        }
+        for (var i = 0; i < input.length; i++) {
+          if (codes[i] == null || codes[i].length == 0) {
+            alert('You did not write a caption for #' + (i+1));
+            return false;
+          }
+        }
+
+        // Copy the url and captions to the output we will return to the requester.
+        var output = input;
+        for (var i = 0; i < output.length; i++) {
+          output[i]['code'] = codes[i];
+        }
+        if (easyturk.isPreview()) {
+          alert("This is only a preview. Here is your output: \n" + JSON.stringify(output));
+          return false;
+        } else {
+          easyturk.setOutput(output);
+          return true;
+        }
+      });
+    }
+
+    main();
+  </script>
+</body>
+</html>

@@ -12,8 +12,7 @@ import xml
 
 
 class EasyTurk(object):
-    """Class that contains all the api calls to interface with MTurk.
-    """
+    """Class that contains all the api calls to interface with MTurk."""
 
     def __init__(self, sandbox=True):
         """Constructor for EasyTurk.
@@ -50,8 +49,7 @@ class EasyTurk(object):
         return xml.format(html)
 
     def get_jinja_env(self):
-        """Get a jinja2 Environment object that we can use to find templates.
-        """
+        """Get a jinja2 Environment object that we can use to find templates."""
         dir_location = os.path.dirname(os.path.abspath(__file__))
         templates = os.path.join(dir_location, 'templates')
         return Environment(loader=FileSystemLoader(templates))
@@ -195,7 +193,7 @@ class EasyTurk(object):
                 self.mtc.delete_hit(HITId=hit_id)
                 return True
             except Exception as e:
-                print e
+                print(e)
                 return False
 
     def approve_hit(self, hit_id, reject_on_fail=False,

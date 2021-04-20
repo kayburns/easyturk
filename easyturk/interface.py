@@ -4,7 +4,7 @@
 from easyturk import EasyTurk
 
 
-def launch_verify_question_answer(data, reward=1.00, tasks_per_hit=50, sandbox=False):
+def launch_verify_question_answer(data, reward=0.00, tasks_per_hit=50, sandbox=True):
     """Launches HITs to ask workers to verify bounding boxes.
 
     Args:
@@ -32,7 +32,7 @@ def launch_verify_question_answer(data, reward=1.00, tasks_per_hit=50, sandbox=F
     return hit_ids
 
 
-def launch_verify_relationship(data, reward=1.00, tasks_per_hit=30, sandbox=False):
+def launch_verify_relationship(data, reward=0.00, tasks_per_hit=30, sandbox=True):
     """Launches HITs to ask workers to verify bounding boxes.
 
     Args:
@@ -60,7 +60,7 @@ def launch_verify_relationship(data, reward=1.00, tasks_per_hit=30, sandbox=Fals
     return hit_ids
 
 
-def launch_verify_bbox(data, reward=1.00, tasks_per_hit=30, sandbox=False):
+def launch_verify_bbox(data, reward=0.00, tasks_per_hit=30, sandbox=True):
     """Launches HITs to ask workers to verify bounding boxes.
 
     Args:
@@ -88,7 +88,7 @@ def launch_verify_bbox(data, reward=1.00, tasks_per_hit=30, sandbox=False):
     return hit_ids
 
 
-def launch_caption(data, reward=1.00, tasks_per_hit=10, sandbox=False):
+def launch_caption(data, reward=0.00, tasks_per_hit=10, sandbox=True):
     """Launches HITs to ask workers to caption images.
 
     Args:
@@ -115,8 +115,38 @@ def launch_caption(data, reward=1.00, tasks_per_hit=10, sandbox=False):
         i += tasks_per_hit
     return hit_ids
 
+def launch_minecraft(data, reward=0.00, tasks_per_hit=10, sandbox=True):
+    """Launches HITs to ask workers to caption images.
 
-def fetch_completed_hits(hit_ids, approve=True, sandbox=False):
+    Args:
+        data: List containing image urls for the task.
+        reward: A postive valued dollar amount per task.
+        tasks_per_hit: Number of images per hit.
+        sandbox: Whether to interact on sandbox or production.
+
+    Returns:
+        A list of hit ids that have been launched.
+    """
+    et = EasyTurk(sandbox=sandbox)
+    template = 'minecraft.html'
+    hit_ids = []
+    i = 0
+    while i < len(data):
+        hit = et.launch_hit(
+            template, data[i:i+tasks_per_hit], reward=reward,
+            title='Build houses with a dialogue agent in Minecraft.',
+            description=('Must have Minecraft 1.12 already installed! We ' \
+                'can\'t reimburse cost of Minecraft, so please accept only ' \
+                'if you have already purchased it for yourself in the past.'),
+            keywords='bots, dialogue, minecraft, games')
+        hit_id = hit['HIT']['HITId']
+        hit_ids.append(hit_id)
+        i += tasks_per_hit
+    return hit_ids
+
+
+
+def fetch_completed_hits(hit_ids, approve=True, sandbox=True):
     """Grabs the results for the hit ids.
 
     Args:
